@@ -30,9 +30,10 @@ class ResponseFormatter
      * @param $message
      * @return JsonResponse
      */
-    public static function success($data = null, $message = null): JsonResponse
+    public static function success($data = null, $message = null, int $code = 200): JsonResponse
     {
         self::$response["meta"]["message"] = $message;
+        self::$response["meta"]["code"] = $code;
         self::$response["result"] = $data;
 
         return response()->json(self::$response, self::$response["meta"]["code"]);
