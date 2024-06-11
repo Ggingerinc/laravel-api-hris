@@ -45,16 +45,15 @@ class TeamController extends Controller
     public function store(CreateTeamRequest $request): JsonResponse
     {
         try {
-            $newData = [
-                "name" => $request->name,
-                "company_id" => $request->company_id,
-            ];
-
             if ($request->hasFile("icon")) {
-                $newData["icon"] = $request->file("icon")->store("public/icons");
+                $path = $request->file("icon")->store("public/icons");
             }
 
-            $team = Team::create($newData);
+            $team = Team::create([
+                "name" => $request->name,
+                "icon" => $path ?? null,
+                "company_id" => $request->company_id,
+            ]);
 
             if (!$team) {
                 throw new \Exception("Team was not created");
@@ -75,16 +74,15 @@ class TeamController extends Controller
                 throw new \Exception("Team not found");
             }
 
-            $updatedData = [
-                "name" => $request->name,
-                "company_id" => $request->company_id,
-            ];
-
             if ($request->hasFile("icon")) {
-                $updatedData["icon"] = $request->file("icon")->store("public/icons");
+                $path = $request->file("icon")->store("public/icons");
             }
 
-            $team->update($updatedData);
+            $team->update([
+                "name" => $request->name,
+                "icon" => $path ?? $team->icon,
+                "company_id" => $request->company_id,
+            ]);
 
             return ResponseFormatter::success($team, "Team updated successfully");
         } catch (\Exception $e) {
@@ -92,7 +90,8 @@ class TeamController extends Controller
         }
     }
 
-    public function destroy(string $id) {
+    public function destroy(string $id)
+    {
         try {
             $team = Team::find($id);
 

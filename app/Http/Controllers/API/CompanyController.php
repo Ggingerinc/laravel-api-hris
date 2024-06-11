@@ -52,15 +52,13 @@ class CompanyController extends Controller
     public function store(CreateCompanyRequest $request): JsonResponse
     {
         try {
-            $path = null;
-
             if ($request->hasFile("logo")) {
                 $path = $request->file("logo")->store("public/logos");
             }
 
             $company = Company::create([
                 "name" => $request->name,
-                "photo" => $path,
+                "photo" => $path ?? null,
             ]);
 
             if (!$company) {
@@ -87,15 +85,14 @@ class CompanyController extends Controller
                 throw new \Exception("Company not found");
             }
 
-            $updatedData = [
-                "name" => $request->name
-            ];
-
             if ($request->hasFile("logo")) {
-                $updatedData["logo"] = $request->file("logo")->store("public/logos");;
+                $path = $request->file("logo")->store("public/logos");
             }
 
-            $company->update($updatedData);
+            $company->update([
+                "name" => $request->name,
+                "logo" => $path ?? $company->logo
+            ]);
 
             return ResponseFormatter::success($company, "Company updated successfully");
         } catch (\Exception $e) {
