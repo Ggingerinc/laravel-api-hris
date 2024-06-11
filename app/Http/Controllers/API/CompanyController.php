@@ -13,10 +13,11 @@ use http\Exception\RuntimeException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Psy\Util\Json;
 
 class CompanyController extends Controller
 {
-    public function fetch(Request $request)
+    public function fetch(Request $request): JsonResponse
     {
         $id = $request->input("id");
         $name = $request->input("name");
@@ -48,7 +49,7 @@ class CompanyController extends Controller
         return ResponseFormatter::success($companies->paginate($limit), "Companies found");
     }
 
-    public function store(CreateCompanyRequest $request)
+    public function store(CreateCompanyRequest $request): JsonResponse
     {
         try {
             $path = null;
@@ -63,7 +64,7 @@ class CompanyController extends Controller
             ]);
 
             if (!$company) {
-                throw new RuntimeException("Company was not created");
+                throw new \Exception("Company was not created");
             }
 
             $user = Auth::user();
@@ -72,10 +73,8 @@ class CompanyController extends Controller
             $company->load("users");
 
             return ResponseFormatter::success($company, "Company created successfully");
-        } catch (\RuntimeException $e) {
-            return ResponseFormatter::error($e->getMessage(), 500);
         } catch (\Exception $e) {
-            return ResponseFormatter::error("An unexpected error occurred", 500);
+            return ResponseFormatter::error($e->getMessage(), 500);
         }
     }
 
@@ -85,7 +84,7 @@ class CompanyController extends Controller
             $company = Company::find($id);
 
             if (!$company) {
-                throw new RuntimeException("Company not found");
+                throw new \Exception("Company not found");
             }
 
             $updatedData = [
@@ -99,8 +98,6 @@ class CompanyController extends Controller
             $company->update($updatedData);
 
             return ResponseFormatter::success($company, "Company updated successfully");
-        } catch (\RuntimeException $e) {
-            return ResponseFormatter::error($e->getMessage(), 500);
         } catch (\Exception $e) {
             return ResponseFormatter::error($e->getMessage(), 500);
         }
