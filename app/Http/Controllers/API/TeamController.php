@@ -39,7 +39,7 @@ class TeamController extends Controller
             $teams->where("name", "LIKE", "%" . $name . "%");
         }
 
-        return ResponseFormatter::success($teams->paginate($limit), "Teams found");
+        return ResponseFormatter::success($teams->simplePaginate($limit), "Teams found");
     }
 
     public function store(CreateTeamRequest $request): JsonResponse

@@ -32,6 +32,7 @@ class ResponseFormatter
      */
     public static function success($data = null, $message = null, int $code = 200): JsonResponse
     {
+        self::$response["api_version"] = env("API_VERSION", "0.0.0");
         self::$response["meta"]["message"] = $message;
         self::$response["meta"]["code"] = $code;
         self::$response["result"] = $data;
@@ -49,6 +50,7 @@ class ResponseFormatter
      */
     public static function error($message = null, int $code = 400): JsonResponse
     {
+        self::$response["api_version"] = env("API_VERSION", "0.0.0");
         self::$response["meta"]["status"] = "error";
         self::$response["meta"]["code"] = $code;
         self::$response["meta"]["message"] = $message;
