@@ -101,7 +101,7 @@ class TeamController extends Controller
 
             $team->delete();
 
-            return ResponseFormatter::success([], "Team updated successfully");
+            return ResponseFormatter::success([], "Team deleted successfully");
         } catch (\Exception $e) {
             return ResponseFormatter::error($e->getMessage(), 500);
         }

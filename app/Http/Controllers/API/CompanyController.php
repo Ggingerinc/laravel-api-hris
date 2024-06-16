@@ -94,7 +94,7 @@ class CompanyController extends Controller
                 "logo" => $path ?? $company->logo
             ]);
 
-            return ResponseFormatter::success($company, "Company updated successfully");
+            return ResponseFormatter::success($company, "Company deleted successfully");
         } catch (\Exception $e) {
             return ResponseFormatter::error($e->getMessage(), 500);
         }

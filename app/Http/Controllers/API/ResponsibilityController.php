@@ -72,7 +72,7 @@ class ResponsibilityController extends Controller
 
             $responsibility->delete();
 
-            return ResponseFormatter::success([], "Responsibility updated successfully");
+            return ResponseFormatter::success([], "Responsibility deleted successfully");
         } catch (\Exception $e) {
             return ResponseFormatter::error($e->getMessage(), 500);
         }

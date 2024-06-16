@@ -96,7 +96,7 @@ class RoleController extends Controller
 
             $role->delete();
 
-            return ResponseFormatter::success([], "Role updated successfully");
+            return ResponseFormatter::success([], "Role deleted successfully");
         } catch (\Exception $e) {
             return ResponseFormatter::error($e->getMessage(), 500);
         }
