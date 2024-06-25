@@ -18,8 +18,10 @@ class TeamController extends Controller
         $id = $request->input("id");
         $name = $request->input("name");
         $limit = $request->input("limit");
+        $companyId = $request->input("company-id");
+        $withEmployee = $request->input("with-employee");
 
-        $teamQuery = Team::query();
+        $teamQuery = Team::query()->withCount("employees");
 
         // Get a single data
         if ($id) {
@@ -33,10 +35,14 @@ class TeamController extends Controller
         }
 
         // Get multiple data
-        $teams = $teamQuery->where("company_id", $request->company_id);
+        $teams = $teamQuery->where("company_id", $companyId);
 
         if ($name) {
             $teams->where("name", "LIKE", "%" . $name . "%");
+        }
+
+        if($withEmployee) {
+            $teams->with("employees");
         }
 
         return ResponseFormatter::success($teams->simplePaginate($limit), "Teams found");
